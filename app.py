@@ -3,6 +3,7 @@ import pandas as pd
 import numpy as np
 from model import load_data, predict
 from genres_occu_list import convert_genres, occu_list
+from ModelClass import MovieModel
 
 # page control
 if 'page' not in st.session_state:
@@ -10,6 +11,7 @@ if 'page' not in st.session_state:
 
 # navigate
 def navigate_to_page1():
+    del st.session_state.movies_are_found 
     st.session_state.page = 'home'
 
 # navigate
@@ -138,10 +140,8 @@ def page2():
             }
             score_list.append(score)
 
-    st.write(score_list)
-
     predict(st.session_state.user_data, score_list)
-    
+
     st.button("Go to Page 1", on_click=navigate_to_page1)
 
 def main():
