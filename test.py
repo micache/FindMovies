@@ -1,53 +1,59 @@
 import streamlit as st
 import pandas as pd
 
-# Simulated dataset with multiple genres per movie
-data = {
-    "Movie Name": ["Inception", "The Matrix", "Interstellar", "The Godfather", "Skyfall"],
-    "Genres": [
-        ["Sci-Fi", "Adventure"],  # Multiple genres for Inception
-        ["Sci-Fi", "Action"],     # Multiple genres for The Matrix
-        ["Sci-Fi", "Drama"],      # Multiple genres for Interstellar
-        ["Crime", "Drama"],       # Multiple genres for The Godfather
-        ["Action", "Thriller"]    # Multiple genres for Skyfall
-    ]
-}
-movies_df = pd.DataFrame(data)
+occu_list = {"other"
+	,"academic/educator"
+	,"artist"
+	,"clerical/admin"
+	,"college/grad student"
+	,"customer service"
+	,"doctor/health care"
+	,"executive/managerial"
+	,"farmer"
+	,"homemaker"
+	,"K-12 student"
+	,"lawyer"
+	,"programmer"
+	,"retired"
+	,"sales/marketing"
+	,"scientist"
+	,"self-employed"
+	,"technician/engineer"
+	,"tradesman/craftsman"
+	,"unemployed"
+	,"writer"
+    }
+
+def save_user_data(data):
+
+    """Save the registered user data to a CSV file."""
+    df = pd.DataFrame([data])
+    st.write(df)
+
+def show_registration_form():
+    """Show the registration form and handle data submission."""
+    with st.form(key='registration_form'):
+        username = st.text_input("Username")
+        password = st.text_input("Password", type="password")
+        gender = st.selectbox("Gender", options=["Male", "Female"])
+        occupation = st.selectbox("Occupation", options=occu_list)
+        age = st.number_input("Age", min_value=18, max_value=100, step=1, format='%d')
+        submit_button = st.form_submit_button("Register")
+
+        if submit_button:
+            user_data = {
+                'username': username,
+                'password': password,  
+                'gender': gender,
+                'occupation' : occupation,
+                'age': age
+            }
+            save_user_data(user_data)
+            st.success(f"User {username} registered successfully!")
 
 def main():
-    st.title("Movie Search App")
-
-    # User inputs
-    movie_name_query = st.text_input("Enter movie name:")
-
-    # Generate checkboxes for each unique genre dynamically
-    all_genres = set(genre for sublist in movies_df['Genres'] for genre in sublist)
-    selected_genres = []
-    genre_cols = st.columns(4)  # Organizing checkboxes into rows of four columns
-    for index, genre in enumerate(all_genres):
-        with genre_cols[index % 4]:
-            if st.checkbox(genre, key=genre):
-                selected_genres.append(genre)
-
-    # Search button
-    if st.button("Search"):
-        # Filter by name if specified
-        if movie_name_query:
-            result = movies_df[movies_df["Movie Name"].str.contains(movie_name_query, case=False)]
-        else:
-            result = movies_df
-
-        # Further filter by selected genres if any
-        if selected_genres:
-            # Use a lambda to check if any selected genre is in a movie's genres
-            result = result[result['Genres'].apply(lambda genres: any(g in selected_genres for g in genres))]
-
-        # Display results
-        if not result.empty:
-            st.write("## Search Results")
-            st.dataframe(result)
-        else:
-            st.write("No results found.")
+    st.title("User Registration Form")
+    show_registration_form()
 
 if __name__ == "__main__":
     main()

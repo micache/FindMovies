@@ -2,49 +2,57 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 from model import load_data
-
-convert_genres = [ 'Action'
-	,' Adventure'
-	,' Animation'
-	,' Children'
-	,' Comedy'
-	,' Crime'
-	,' Documentary'
-	,' Drama'
-	,' Fantasy'
-	,' Film-Noir'
-	,' Horror'
-	,' Musical'
-	,' Mystery'
-	,' Romance'
-	,' Sci-Fi'
-	,' Thriller'
-	,' War'
-	,' Western'
-    ,' Sport'
-    ,' Unknown'
-]
+from genres_occu_list import convert_genres, occu_list
 
 # page control
 if 'page' not in st.session_state:
     st.session_state.page = 'home'
 
+# navigate
 def navigate_to_page1():
     st.session_state.page = 'home'
 
+# navigate
 def navigate_to_page2():
     st.session_state.page = 'page2'
 
-def show_movie_details(movie_id, movie_title, movie_genres):
-    """Display details of a movie."""
-    st.write(f"### {movie_title}")
-    st.write("Genres:", ', '.join([convert_genres[genre] for genre in movie_genres]))
+# save user regis info
+def save_user_data(data):
+    # save user data in session state
+    st.session_state.user_data = data
+    
+
+# regis form
+def show_registration_form():
+    # show the registration form and handle data submission.
+    with st.form(key='registration_form'):
+        username = st.text_input("Username")
+        password = st.text_input("Password", type="password")
+        gender = st.selectbox("Gender", options=["Male", "Female"])
+        occupation = st.selectbox("Occupation", options=occu_list)
+        age = st.number_input("Age", min_value=18, max_value=100, step=1, format='%d')
+
+        if st.form_submit_button("Register"):
+            user_data = {
+                'username': username,
+                'password': password,  
+                'gender': gender,
+                'occupation' : occupation,
+                'age': age
+            }
+            save_user_data(user_data)
+            st.success(f"User {username} registered successfully!")
 
 # just convert to dataframe 1 time
 if 'ratings_df' not in st.session_state:
     st.session_state.ratings_df, st.session_state.movies_df = load_data()
     # convert title to str
     st.session_state.movies_df['movie_title'] = st.session_state.movies_df['movie_title'].str.decode('utf-8')
+
+# display details of a movie.
+def show_movie_details(movie_id, movie_title, movie_genres):
+    st.write(f"### {movie_title}")
+    st.write("Genres:", ', '.join([convert_genres[genre] for genre in movie_genres]))
 
 def show_movie(row):
     movie_id = row['movie_id'].decode('utf-8')
@@ -64,13 +72,14 @@ def show_movie(row):
     # Create a slider for scoring each movie
     score = st.slider("Score", 
                       min_value=0, 
-                      max_value=10, 
+                      max_value=5, 
                       key=key,
                       value=st.session_state['_' + key])
     st.session_state['_' + key] = score
 
 def main_page():
-    st.title('Movie recommendation')
+    st.title(f"Hello, {st.session_state.user_data['username']}")
+    st.title('Looking for a new movie ?')
     movies_df = st.session_state.movies_df
 
     movie_name_query = st.text_input("Enter movie name:")
@@ -108,8 +117,11 @@ def page2():
     st.button("Go to Page 1", on_click=navigate_to_page1)
 
 def main():
+
     # navigation control based on session state
-    if st.session_state.page == 'home':
+    if 'user_data' not in st.session_state:
+        show_registration_form()
+    elif st.session_state.page == 'home':
         main_page()
     elif st.session_state.page == 'page2':
         page2()

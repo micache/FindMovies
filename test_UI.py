@@ -34,7 +34,7 @@ def main():
             show_movie_details(movie_id, movie_title, movie_genres)
 
         # Create a slider for scoring each movie
-        score = st.slider("Score", 0, 10, key=f"score_{movie_id}")
+        score = st.slider("Score", 0, 5, key=f"score_{movie_id}")
         movie_scores[movie_id] = score
 
     if st.button("Submit Scores"):
