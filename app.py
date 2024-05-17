@@ -21,3 +21,22 @@ if uploaded_file is not None:
         # Process the CSV file
         save_csv_to_db(uploaded_file)
         st.success('CSV file successfully uploaded and saved to the database!')
+
+import streamlit as st
+import time
+
+def simulate_long_process():
+    # Simulate a long process with a loop and time.sleep
+    progress_bar = st.progress(0)
+    status_text = st.empty()
+    for percent_complete in range(101):
+        time.sleep(0.1)  # Simulating work by sleeping
+        progress_bar.progress(percent_complete)
+        status_text.text(f'Progress: {percent_complete}%')
+    status_text.text('Done!')
+
+st.title('Loading Percentage Slider Demo')
+
+# Button to start the process
+if st.button('Start Loading'):
+    simulate_long_process()
