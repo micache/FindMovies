@@ -8,3 +8,6 @@ def load_data():
     # ratings_df = tfds.as_dataframe(ratings)
     movies_df = tfds.as_dataframe(movies)
     return [], movies_df
+
+def predict(new_user, list_of_rate):
+    pass

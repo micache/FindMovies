@@ -1,7 +1,7 @@
 import streamlit as st
 import pandas as pd
 import numpy as np
-from model import load_data
+from model import load_data, predict
 from genres_occu_list import convert_genres, occu_list
 
 # page control
@@ -52,6 +52,7 @@ if 'ratings_df' not in st.session_state:
 # display details of a movie.
 def show_movie_details(movie_id, movie_title, movie_genres):
     st.write(f"### {movie_title}")
+    st.write(f"### ID: {movie_id}")
     st.write("Genres:", ', '.join([convert_genres[genre] for genre in movie_genres]))
 
 def show_movie(row):
@@ -68,6 +69,10 @@ def show_movie(row):
     # create dummy (_key) to save the current score
     if ('_' + key) not in st.session_state:
         st.session_state['_' + key] = 0
+        st.session_state['_' + key + '_movie_id'] = movie_id
+        st.session_state['_' + key + '_movie_title'] = movie_title
+        st.session_state['_' + key + '_movie_genres'] = movie_genres
+        
 
     # Create a slider for scoring each movie
     score = st.slider("Score", 
@@ -78,10 +83,12 @@ def show_movie(row):
     st.session_state['_' + key] = score
 
 def main_page():
-    st.title(f"Hello, {st.session_state.user_data['username']}")
+    st.title(f"Hello, {st.session_state.user_data['username']}!")
     st.title('Looking for a new movie ?')
+    st.markdown("##### Please rate some of your watched movie below to help us find some movies best fit with you:")
     movies_df = st.session_state.movies_df
 
+    # query step
     movie_name_query = st.text_input("Enter movie name:")
 
     # Generate checkboxes for each unique genre dynamically
@@ -111,9 +118,30 @@ def main_page():
 
     st.button("Finish", on_click=navigate_to_page2)
 
+# train model and predict
 def page2():
     st.title('Page 2')
     st.write("You are now on page 2. This page is only accessible via a button from the main page.")
+    
+    min_movie_id = 1
+    max_movie_id = 3952
+    score_list = []
+    # get all the movies have been rated
+    for i in range(1, max_movie_id + 1):
+        key = f"_score_{i}"
+        if key in st.session_state and st.session_state[key] > 0:
+            score = {
+                'rate': st.session_state[key],
+                'movie_id': st.session_state[key + '_movie_id'],
+                'movie_title': st.session_state[key + '_movie_title'],
+                'movie_genres': st.session_state[key + '_movie_genres']
+            }
+            score_list.append(score)
+
+    st.write(score_list)
+
+    predict(st.session_state.user_data, score_list)
+    
     st.button("Go to Page 1", on_click=navigate_to_page1)
 
 def main():
