@@ -3,8 +3,8 @@ import pandas as pd
 import numpy as np
 from model import load_data, predict
 from genres_occu_list import convert_genres, occu_list
-from ModelClass import MovieModel
 import requests
+import time
 
 # page control
 if 'page' not in st.session_state:
@@ -44,7 +44,7 @@ def show_registration_form():
                 'age': age
             }
             save_user_data(user_data)
-            st.success(f"User {username} registered successfully!")
+            st.success(f"User {username} registered successfully! Click again to go home page")
 
 # just convert to dataframe 1 time
 if 'ratings_df' not in st.session_state:
@@ -55,7 +55,7 @@ if 'ratings_df' not in st.session_state:
 # fetch the short plot from OMDb
 def get_movie_plot(title, api_key):
     if title == 'unknown':
-        return "Plot not found or invalid movie title."
+        return "Plot not found"
     
     index = title.find('(')
     year = title[index:]
@@ -73,7 +73,7 @@ def get_movie_plot(title, api_key):
     if 'Plot' in movie_data:
         return movie_data['Plot']
     else:
-        return "Plot not found or invalid movie title."
+        return "Plot not found"
 
 # display details of a movie.
 def show_movie_details(movie_id, movie_title, movie_genres):
@@ -143,14 +143,13 @@ def main_page():
         result = result[result['movie_genres'].apply(lambda genres: set(selected_genres).issubset(set(genres)))]
     # print out movie
     st.markdown("## Featured movies")
-    for index, row in result[:50].iterrows():
+    for index, row in result[:20].iterrows():
         show_movie(row, True)
 
     st.button("Finish", on_click=navigate_to_page2)
 
 # train model and predict
 def page2():
-
     min_movie_id = 1
     max_movie_id = 3952
     score_list = []
@@ -159,7 +158,7 @@ def page2():
         key = f"_score_{i}"
         if key in st.session_state and st.session_state[key] > 0:
             score = {
-                'rate': st.session_state[key],
+                'rate': float(st.session_state[key]),
                 'movie_id': st.session_state[key + '_movie_id'],
                 'movie_title': st.session_state[key + '_movie_title'],
                 'movie_genres': st.session_state[key + '_movie_genres']
@@ -167,12 +166,14 @@ def page2():
             score_list.append(score)
 
     recom_movie = predict(st.session_state.user_data, score_list)
-    st.write(recom_movie)
+    
     st.title('Result')
     st.write("### There are some movies you may like: ")
     for index, row in st.session_state.movies_df.iterrows():
         if (row['movie_title'] in recom_movie):
             show_movie(row, False)
+    
+    st.write('### Not happy with the list? Try again!')
     st.button("Go back to home page", on_click=navigate_to_page1)
 
 def main():

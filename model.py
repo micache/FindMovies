@@ -6,7 +6,7 @@ import time
 import tensorflow as tf
 import streamlit as st
 import numpy as np
-from ModelClass import MovieModel
+from ModelClass import MultitaskModel
 
 def load_data():
     # load the MovieLens 100k dataset
@@ -35,7 +35,8 @@ def process_data():
 
     ratings = ratings.map(lambda x: {
         "movie_title": x["movie_title"],
-        "user_id": x["user_id"]
+        "user_id": x["user_id"],
+        "user_rating": x["user_rating"],
     })
     movies = movies.map(lambda x: x["movie_title"])
 
@@ -81,21 +82,20 @@ def create_and_train_model(movies, ratings):
         tf.keras.layers.Embedding(len(unique_movie_titles) + 1, embedding_dimension)
     ])
 
-    # metrics
-    metrics = tfrs.metrics.FactorizedTopK(
-        candidates=movies.batch(128).map(movie_model)   
-    )
-
-    # task
     task = tfrs.tasks.Retrieval(
-        metrics=metrics
-    )
+        metrics=tfrs.metrics.FactorizedTopK(
+            candidates=movies.batch(128).map(movie_model)
+        ))
 
     # create instance and compile
-    model = MovieModel(user_model, movie_model, task)
+    model = MultitaskModel( user_model, 
+                            movie_model,
+                            rating_weight=0.3,
+                            retrieval_weight=1.0,
+                            task=task)
     model.compile(optimizer=tf.keras.optimizers.Adagrad(learning_rate=0.1))
     # fit
-    model.fit(ratings.shuffle(100_000).batch(8192), epochs=5)
+    model.fit(ratings.shuffle(100_000).batch(8192), epochs=3)
     return model
 
 def query(model, movies):
@@ -108,6 +108,13 @@ def query(model, movies):
 
     return index
 
+def predict_rating(title):
+    _, __, predicted_rating = st.session_state.model({
+        "user_id": np.array(["7000"]),
+        "movie_title": np.array([title])
+    })
+    return predicted_rating
+
 def predict(user, list_of_rate):
 
     if 'movies_are_found' not in st.session_state:
@@ -119,7 +126,8 @@ def predict(user, list_of_rate):
             # create new row
             row = {
                 'movie_title': [x['movie_title']],
-                'user_id': ['7000']
+                'user_id': ['7000'],
+                'user_rating': [x['rate']],
             }
             # append to ratings dataset
             row = tf.data.Dataset.from_tensor_slices(row)
@@ -129,9 +137,12 @@ def predict(user, list_of_rate):
         # query
         index = query(model, movies)
         # get recommendations.
-        _, titles = index(np.array(["7000"]), k=10)
+        _, titles = index(np.array(["7000"]), k=100)
         st.session_state.movies_are_found = titles
+        st.session_state.model = model
     
-    # return list of movie name
-    return [s.numpy().decode('utf-8') for s in st.session_state.movies_are_found[0]]
+    top_movies = [s.numpy().decode('utf-8') for s in st.session_state.movies_are_found[0]]
 
+    sorted_top_movies = sorted(top_movies, key=lambda x: -predict_rating(x))
+
+    return sorted_top_movies[:10]
