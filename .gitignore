@@ -161,3 +161,6 @@ cython_debug/
 
 #streamlit
 .streamlit/
+
+#apikey
+apikey.txt

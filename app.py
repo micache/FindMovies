@@ -4,6 +4,7 @@ import numpy as np
 from model import load_data, predict
 from genres_occu_list import convert_genres, occu_list
 from ModelClass import MovieModel
+import requests
 
 # page control
 if 'page' not in st.session_state:
@@ -51,11 +52,38 @@ if 'ratings_df' not in st.session_state:
     # convert title to str
     st.session_state.movies_df['movie_title'] = st.session_state.movies_df['movie_title'].str.decode('utf-8')
 
+# fetch the short plot from OMDb
+def get_movie_plot(title, api_key):
+    if title == 'unknown':
+        return "Plot not found or invalid movie title."
+    
+    index = title.find('(')
+    year = title[index:]
+    title = title[:index]
+
+    year = title[1:-1]
+
+    # build the API URL
+    url = f"http://www.omdbapi.com/?apikey={api_key}&t={title}&y={year}&plot=full"
+    # make request
+    response = requests.get(url)
+    # convert the response to JSON
+    movie_data = response.json()
+    # check if the response contains a movie plot
+    if 'Plot' in movie_data:
+        return movie_data['Plot']
+    else:
+        return "Plot not found or invalid movie title."
+
 # display details of a movie.
 def show_movie_details(movie_id, movie_title, movie_genres):
     st.write(f"### {movie_title}")
     st.write(f"### ID: {movie_id}")
     st.write("Genres:", ', '.join([convert_genres[genre] for genre in movie_genres]))
+    # get api key
+    with open('D:/project/toolkit/apikey.txt', 'r') as file:
+        api_key = file.read()
+    st.write(f"Plot: {get_movie_plot(movie_title, api_key)}")
 
 def show_movie(row, create_slider_or_not):
     movie_id = row['movie_id'].decode('utf-8')
@@ -145,7 +173,7 @@ def page2():
     for index, row in st.session_state.movies_df.iterrows():
         if (row['movie_title'] in recom_movie):
             show_movie(row, False)
-    st.button("Go to Page 1", on_click=navigate_to_page1)
+    st.button("Go back to home page", on_click=navigate_to_page1)
 
 def main():
 
