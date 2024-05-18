@@ -129,9 +129,9 @@ def predict(user, list_of_rate):
         # query
         index = query(model, movies)
         # get recommendations.
-        _, titles = index(np.array(["7000"]), k=3)
+        _, titles = index(np.array(["7000"]), k=10)
         st.session_state.movies_are_found = titles
     
-    for x in st.session_state.movies_are_found[0]:
-        st.write(x.numpy().decode('utf-8')) 
+    # return list of movie name
+    return [s.numpy().decode('utf-8') for s in st.session_state.movies_are_found[0]]
 

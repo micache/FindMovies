@@ -57,7 +57,7 @@ def show_movie_details(movie_id, movie_title, movie_genres):
     st.write(f"### ID: {movie_id}")
     st.write("Genres:", ', '.join([convert_genres[genre] for genre in movie_genres]))
 
-def show_movie(row):
+def show_movie(row, create_slider_or_not):
     movie_id = row['movie_id'].decode('utf-8')
     movie_title = row['movie_title']
     movie_genres = row['movie_genres']
@@ -75,14 +75,14 @@ def show_movie(row):
         st.session_state['_' + key + '_movie_title'] = movie_title
         st.session_state['_' + key + '_movie_genres'] = movie_genres
         
-
-    # Create a slider for scoring each movie
-    score = st.slider("Score", 
-                      min_value=0, 
-                      max_value=5, 
-                      key=key,
-                      value=st.session_state['_' + key])
-    st.session_state['_' + key] = score
+    if (create_slider_or_not):
+        # Create a slider for scoring each movie
+        score = st.slider("Score", 
+                        min_value=0, 
+                        max_value=5, 
+                        key=key,
+                        value=st.session_state['_' + key])
+        st.session_state['_' + key] = score
 
 def main_page():
     st.title(f"Hello, {st.session_state.user_data['username']}!")
@@ -116,15 +116,13 @@ def main_page():
     # print out movie
     st.markdown("## Featured movies")
     for index, row in result[:50].iterrows():
-        show_movie(row)
+        show_movie(row, True)
 
     st.button("Finish", on_click=navigate_to_page2)
 
 # train model and predict
 def page2():
-    st.title('Page 2')
-    st.write("You are now on page 2. This page is only accessible via a button from the main page.")
-    
+
     min_movie_id = 1
     max_movie_id = 3952
     score_list = []
@@ -140,8 +138,13 @@ def page2():
             }
             score_list.append(score)
 
-    predict(st.session_state.user_data, score_list)
-
+    recom_movie = predict(st.session_state.user_data, score_list)
+    st.write(recom_movie)
+    st.title('Result')
+    st.write("### There are some movies you may like: ")
+    for index, row in st.session_state.movies_df.iterrows():
+        if (row['movie_title'] in recom_movie):
+            show_movie(row, False)
     st.button("Go to Page 1", on_click=navigate_to_page1)
 
 def main():
