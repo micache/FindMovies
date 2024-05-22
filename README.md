@@ -18,7 +18,13 @@ Features:
 - User Reviews: You can choose a number (on a scale from 1 to 5) to express your rating to movies you have seen.
 - Watchlist: Keep track of movies you want to watch.
 
-## 2. Structure
+## 2. Technical Overview
+* This application gains your personal information, and your rating on movies which you rated on the home page. After that, it will append your data into a dataset which is loaded earlier and push the final dataset to train a model with parameter is setup before. Finally, it will predict the top 10 movies are suitable with you.
+* The model in this application is Multitask Model, which is combine of Retrieval Model (try to predict the top-k movies you may like) and a MLP model to predict rating for each movies. The model is programmed based on **tensorflow** library
+* The UI is create by using the **Streamlit** components, and the detail of the movie is gotten by calling the API to the OMDb database.
+* There is a `test/` folder contains all the script to automated testing (using **pytest**)
+
+## 3. Structure
 
 The directory structure should look like this:
 
@@ -30,7 +36,7 @@ The directory structure should look like this:
 * `requirements.txt` : Necessary Dependecies
 * `tests/` : is the folder contains script for automated test
 
-## 3. Installation
+## 4. Installation
 
 ### Requirements
 To use Trivix, you must have the following installed
@@ -60,7 +66,7 @@ $ conda create --name <env-name> --file </path/to/requirements.txt>
 * If you are using Visual Studio Code, you can choose it in the right-down corner of the screen
 * For the other you should search for choosing interpreter for that IDE / code editing application
 
-## 4. Usage
+## 5. Usage
 
 This application is built with a website-like interface, very user-friendly.
 You have to provide some personal information before get to the home page. Your personal information is only for caculating and helping the model to predict more percisely.
@@ -72,7 +78,7 @@ $ streamlit run app.py
 ```
 A website will be hosted on the port 8501. For specific, it will be hosted in your web browser at `http://localhost:8501`
 
-## 5. References
+## 6. References
 - https://www.tensorflow.org/recommenders/examples/quickstart
 - https://docs.streamlit.io/
 - https://conda.io/projects/conda/en/latest/user-guide/getting-started.html
