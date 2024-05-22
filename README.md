@@ -40,7 +40,7 @@ The directory structure should look like this:
 ## 4. Installation
 
 ### Requirements
-To use Trivix, you must have the following installed
+To use this app, you must have the following installed
 - python >= 3.11.9
 - streamlit
 - tensorflow
