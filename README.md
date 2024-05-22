@@ -3,10 +3,11 @@
 ## Index
 
 * [1. Introduction](#1-introduction)
-* [2. Structures](#2-structure)
-* [3. Installation](#3-installation)
-* [4. Usage](#4-usage)
-* [5. References](#5-references)
+* [2. Techical Overview](#2-technical-overview)
+* [3. Structures](#3-structure)
+* [4. Installation](#4-installation)
+* [5. Usage](#5-usage)
+* [6. References](#6-references)
 
 ## 1. Introduction
 
