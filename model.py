@@ -145,4 +145,5 @@ def predict(user, list_of_rate):
 
     sorted_top_movies = sorted(top_movies, key=lambda x: -predict_rating(x))
 
+    # return top 10 match
     return sorted_top_movies[:10]

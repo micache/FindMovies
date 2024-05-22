@@ -35,7 +35,7 @@ def show_registration_form():
         occupation = st.selectbox("Occupation", options=occu_list)
         age = st.number_input("Age", min_value=18, max_value=100, step=1, format='%d')
 
-        if st.form_submit_button("Register"):
+        if st.form_submit_button('Register'):
             user_data = {
                 'username': username,
                 'password': password,  

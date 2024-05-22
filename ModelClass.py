@@ -30,7 +30,7 @@ class MultitaskModel(tfrs.models.Model):
     embedding_dimension = 32
     self.user_model: tf.keras.Model = user_model
     self.movie_model: tf.keras.Model = movie_model
-    # regression model for predict rating
+    # MLP model for predict rating
     self.rating_model = tf.keras.Sequential([
         tf.keras.layers.Dense(256, activation="relu"),
         tf.keras.layers.Dense(128, activation="relu"),
@@ -57,7 +57,7 @@ class MultitaskModel(tfrs.models.Model):
     return (
         user_embeddings,
         movie_embeddings,
-        # We apply the multi-layered rating model to a concatentation of
+        # apply the multi-layered rating model to a concatentation of
         # user and movie embeddings.
         self.rating_model(
             tf.concat([user_embeddings, movie_embeddings], axis=1)
