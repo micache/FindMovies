@@ -13,7 +13,7 @@
 Tired of scrolling endlessly to find the perfect movie? Our app is here to help! Get personalized movie recommendations based on your tastes and preferences.
 
 Features:
-- Personalized Suggestions: Discover movies tailored to your viewing habits.
+- Personalized Suggestions: Discover approximately 1700 movies tailored to your viewing habits.
 - Huge Movie Library: Find movies from all genres, all the classic included.
 - User Reviews: You can choose a number (on a scale from 1 to 5) to express your rating to movies you have seen.
 - Watchlist: Keep track of movies you want to watch.
