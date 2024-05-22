@@ -121,7 +121,7 @@ def main_page():
     # query step
     movie_name_query = st.text_input("Enter movie name:")
 
-    # Generate checkboxes for each unique genre dynamically
+    # generate checkboxes for each unique genre dynamically
     all_genres = set(genre for sublist in movies_df['movie_genres'] for genre in sublist)
     
     selected_genres = []
@@ -133,13 +133,13 @@ def main_page():
                 selected_genres.append(genre)
 
     result = movies_df
-    # Filter by name if specified
+    # filter by name if specified
     if movie_name_query:
         result = movies_df[movies_df["movie_title"].str.contains(movie_name_query, case=False)]
 
-    # Further filter by selected genres if any
+    # further filter by selected genres if any
     if selected_genres:
-        # Use a lambda to check if any selected genre is in a movie's genres
+        # use a lambda to check if any selected genre is in a movie's genres
         result = result[result['movie_genres'].apply(lambda genres: set(selected_genres).issubset(set(genres)))]
     # print out movie
     st.markdown("## Featured movies")
