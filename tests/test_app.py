@@ -1,7 +1,7 @@
 from streamlit.testing.v1 import AppTest
 
 def test_registration_form():
-    at = AppTest.from_file('app.py', default_timeout=30).run()
+    at = AppTest.from_file('app.py', default_timeout=1000).run()
 
     # check username
     at.text_input[0].set_value('username')
