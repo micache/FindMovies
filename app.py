@@ -108,7 +108,7 @@ def show_movie(row, create_slider_or_not):
     movie_genres = row['movie_genres']
 
     # Create a button for each movie
-    if st.button(movie_title):
+    if st.button(movie_title, key=f"{movie_title}_after"):
         show_movie_details(movie_id, movie_title, movie_genres)
 
     key = f"score_{movie_id}"
