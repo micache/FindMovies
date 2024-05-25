@@ -80,8 +80,7 @@ def show_movie_details(movie_id, movie_title, movie_genres):
     st.write(f"### ID: {movie_id}")
     st.write("Genres:", ', '.join([convert_genres[genre] for genre in movie_genres]))
     # get api key
-    with open('apikey.txt', 'r') as file:
-        api_key = file.read()
+    api_key = st.secrets['api_key']
     plot, poster, ratings = get_movie_detail(movie_title, api_key)
     st.write(f"Plot: {plot}")
     if poster != "N/A":
