@@ -63,7 +63,10 @@ $ conda create --name <env-name> --file </path/to/requirements.txt>
 ```cmd
 > conda activate <env-name>
 ```
-4. Select the interpreter for your python file to run
+4. Getting API key for the OMDb database:
+* Go to this website: https://www.omdbapi.com/apikey.aspx and type in your email to get the API key
+* After retrieve the API key, create a file name `apikey.txt` and put your key in here
+5. Select the interpreter for your python file to run
 * If you are using Visual Studio Code, you can choose it in the right-down corner of the screen
 * For the other you should search for choosing interpreter for that IDE / code editing application
 

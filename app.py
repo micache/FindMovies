@@ -81,7 +81,7 @@ def show_movie_details(movie_id, movie_title, movie_genres):
     st.write(f"### ID: {movie_id}")
     st.write("Genres:", ', '.join([convert_genres[genre] for genre in movie_genres]))
     # get api key
-    with open('D:/project/toolkit/apikey.txt', 'r') as file:
+    with open('apikey.txt', 'r') as file:
         api_key = file.read()
     st.write(f"Plot: {get_movie_plot(movie_title, api_key)}")
 
