@@ -28,6 +28,7 @@ def save_user_data(data):
 
 # regis form
 def show_registration_form():
+    st.title("Register")
     # show the registration form and handle data submission.
     with st.form(key='registration_form'):
         username = st.text_input("Username")
