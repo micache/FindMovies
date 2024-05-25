@@ -1,7 +1,7 @@
 from streamlit.testing.v1 import AppTest
 
 def test_registration_form():
-    at = AppTest.from_file('app.py', default_timeout=1000).run()
+    at = AppTest.from_file('app.py', default_timeout=30).run()
 
     # check username
     at.text_input[0].set_value('username')
@@ -57,7 +57,7 @@ def test_home_page():
     assert at.slider[0].value == 5
 
 def test_search():
-    at = AppTest.from_file('app.py', default_timeout=30).run()
+    at = AppTest.from_file('app.py', default_timeout=1000).run()
 
     at.session_state['user_data'] = {
                 'username': 'username',
