@@ -52,7 +52,6 @@ pydeck==0.9.1
 pytest==8.2.1
 pytest-cov==5.0.0
 pytest-timeout==2.3.1
-python==3.11.9
 python-dateutil==2.9.0.post0
 pytz==2024.1
 referencing==0.35.1
