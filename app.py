@@ -5,6 +5,7 @@ from model import load_data, predict
 from genres_occu_list import convert_genres, occu_list
 import requests
 import time
+import re
 
 # page control
 if 'page' not in st.session_state:
@@ -53,7 +54,7 @@ if 'ratings_df' not in st.session_state:
     st.session_state.movies_df['movie_title'] = st.session_state.movies_df['movie_title'].str.decode('utf-8')
 
 # fetch the short plot from OMDb
-def get_movie_plot(title, api_key):
+def get_movie_detail(title, api_key):
     if title == 'unknown':
         return "Plot not found"
     
@@ -69,11 +70,8 @@ def get_movie_plot(title, api_key):
     response = requests.get(url)
     # convert the response to JSON
     movie_data = response.json()
-    # check if the response contains a movie plot
-    if 'Plot' in movie_data:
-        return movie_data['Plot']
-    else:
-        return "Plot not found"
+    # response contains a movie plot
+    return movie_data['Plot'], movie_data['Poster'], movie_data['Ratings']
 
 # display details of a movie.
 def show_movie_details(movie_id, movie_title, movie_genres):
@@ -83,11 +81,30 @@ def show_movie_details(movie_id, movie_title, movie_genres):
     # get api key
     with open('apikey.txt', 'r') as file:
         api_key = file.read()
-    st.write(f"Plot: {get_movie_plot(movie_title, api_key)}")
+    plot, poster, ratings = get_movie_detail(movie_title, api_key)
+    st.write(f"Plot: {plot}")
+    if poster != "N/A":
+        col1, col2 = st.columns([2, 1])
+        with col1:
+            st.image(poster, use_column_width=True)
+        with col2:
+            st.write ("Some ratings from popular movie review: ")
+            for pair in ratings:
+                st.write(f"#### {pair['Source']}: {pair['Value']}")
+
+def convert_title(title):
+    # Define a regex pattern to match titles with ", The"
+    pattern = r"^(.*), The \((\d{4})\)$"
+    match = re.match(pattern, title)
+    if match:
+        # Rearrange the title to "The <Title> (<Year>)"
+        return f"The {match.group(1)} ({match.group(2)})"
+    else:
+        return title
 
 def show_movie(row, create_slider_or_not):
     movie_id = row['movie_id'].decode('utf-8')
-    movie_title = row['movie_title']
+    movie_title = convert_title(row['movie_title'])
     movie_genres = row['movie_genres']
 
     # Create a button for each movie
