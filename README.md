@@ -7,7 +7,8 @@
 * [3. Structures](#3-structure)
 * [4. Installation](#4-installation)
 * [5. Usage](#5-usage)
-* [6. References](#6-references)
+* [6. Packaging to Docker](#6-packaging-to-docker)
+* [7. References](#7-references)
 
 ## 1. Introduction
 
@@ -86,7 +87,19 @@ $ streamlit run app.py
 ```
 A website will be hosted on the port 8501. For specific, it will be hosted in your web browser at `http://localhost:8501`
 
-## 6. References
+## 6. Packaging to Docker
+If you want to package your application into a Docker image and run it in a containerized environment, follow these steps:
+*  Navigate to the directory containing the Dockerfile and run the following command to build the Docker image:
+```cmd
+> docker build -t <app_name>
+```
+* Run the Docker image:
+```cmd
+> docker run -p <app_name>
+```
+The application will be hosted on port 8501.
+
+## 7. References
 - https://www.tensorflow.org/recommenders/examples/quickstart
 - https://docs.streamlit.io/
 - https://conda.io/projects/conda/en/latest/user-guide/getting-started.html
