@@ -6,6 +6,7 @@ from genres_occu_list import convert_genres, occu_list
 import requests
 import time
 import re
+import random
 
 # page control
 if 'page' not in st.session_state:
@@ -120,7 +121,7 @@ def show_movie(row, create_slider_or_not):
         st.session_state['_' + key + '_movie_title'] = movie_title
         st.session_state['_' + key + '_movie_genres'] = movie_genres
         
-    if (create_slider_or_not):
+    if create_slider_or_not:
         # Create a slider for scoring each movie
         score = st.slider("Score", 
                         min_value=0, 
@@ -160,6 +161,7 @@ def main_page():
         result = result[result['movie_genres'].apply(lambda genres: set(selected_genres).issubset(set(genres)))]
     # print out movie
     st.markdown("## Featured movies")
+    result = result.drop_duplicates(subset='movie_title', keep='first')
     for index, row in result[:20].iterrows():
         show_movie(row, True)
 
