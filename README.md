@@ -57,11 +57,7 @@ $ git clone https://github.com/micache/FindMovies.git
 - You need to install anaconda (or miniconda): https://www.anaconda.com/download
 - Then open the anaconda prompt (or anaconda.navigator) to create new environment:
 ```bash
-<<<<<<< HEAD
 $ conda create -n <env-name> -f </path/to/environment.yml>
-=======
-$ conda create -n <env-name> -f </path/to/requirements_conda.txt>
->>>>>>> 837b7f40104b5e85b1b259e45fb152f4dea3da29
 ```
 * If you are not using virtual environment, you can run this command for install neccessary dependencies:
 ```cmd
@@ -74,7 +70,10 @@ $ conda create -n <env-name> -f </path/to/requirements_conda.txt>
 ```
 4. Getting API key for the OMDb database:
 * Go to this website: https://www.omdbapi.com/apikey.aspx and type in your email to get the API key
-* After retrieve the API key, create a file name `apikey.txt` and put your key in here
+* After retrieve the API key, create a file at path `.streamlit/secrets.toml` and put your key in here like this:
+```bash
+api_key = "your_api_key"
+```
 5. Select the interpreter for your python file to run
 * If you are using Visual Studio Code, you can choose it in the right-down corner of the screen
 * For the other you should search for choosing interpreter for that IDE / code editing application
