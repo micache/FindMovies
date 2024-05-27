@@ -57,11 +57,7 @@ $ git clone https://github.com/micache/FindMovies.git
 - You need to install anaconda (or miniconda): https://www.anaconda.com/download
 - Then open the anaconda prompt (or anaconda.navigator) to create new environment:
 ```bash
-<<<<<<< HEAD
 $ conda create -n <env-name> -f </path/to/environment.yml>
-=======
-$ conda create -n <env-name> -f </path/to/requirements_conda.txt>
->>>>>>> 837b7f40104b5e85b1b259e45fb152f4dea3da29
 ```
 * If you are not using virtual environment, you can run this command for install neccessary dependencies:
 ```cmd
