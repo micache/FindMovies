@@ -74,9 +74,22 @@ $ conda create -n <env-name> -f </path/to/environment.yml>
 ```bash
 api_key = "your_api_key"
 ```
-5. Select the interpreter for your python file to run
-* If you are using Visual Studio Code, you can choose it in the right-down corner of the screen
-* For the other you should search for choosing interpreter for that IDE / code editing application
+5. Install some dependencies for Windows OS:
+* If you use Windows so you have to install some addition libraries (add this to your `environment.yml` file):
+```yml
+name: toolkit
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  ...
+  - pywin32=306=py311h12c1d0e_2
+  - vc=14.2=h21ff451_1
+  - vc14_runtime=14.38.33130=h82b7239_18
+  - vs2015_runtime=14.38.33130=hcb4865c_18
+  - ucrt=10.0.22621.0=h57928b3_0
+  - pip: ...
+```
 
 ## 5. Usage
 
