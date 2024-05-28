@@ -84,7 +84,6 @@ dependencies:
       - tensorflow==2.13.1
       - tensorflow-datasets==4.9.4
       - tensorflow-estimator==2.13.0
-      - tensorflow-intel==2.13.1
       - tensorflow-io-gcs-filesystem==0.31.0
       - tensorflow-metadata==1.15.0
       - tensorflow-recommenders==0.7.3
